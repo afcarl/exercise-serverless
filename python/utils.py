@@ -19,7 +19,7 @@ def get_signals(df):
     return df
 
 def print_signals():
-    stocks = ["AC","AEV","AGI","ALI"]
+    stocks = ["AC","AEV","AGI","ALI","AP","BDO","BPI","DMC","EDC","EMP","FGEN","GLO","GTCAP","ICT","JFC","LTG","MBT","MEG","MER","MPI","PCOR","RLC","SCC","SECB","SM","SMC","SMPH","TEL","URC"]
     for stock in stocks:
         dd = client.get_history(stock)
         dd = indicators.ac(dd)
