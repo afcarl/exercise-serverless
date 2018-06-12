@@ -29,6 +29,10 @@ def print_signals():
             print(dd.tail())
             print("\n")
 
+# def pp(x):
+#     print(type(x))
+# type of x is an nd_array
+# dd.rolling(5).apply(pp)
 # rec.insert_many([
 #     {"item": "journal",
 #      "qty": 25,
