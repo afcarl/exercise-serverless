@@ -5,9 +5,9 @@ import utils
 import requests
 from datetime import datetime, timedelta
 
-def get_history(stock):
+def get_history(stock, convertTime=True, days=100):
     now = datetime.today()
-    past = now - timedelta(days=100)
+    past = now - timedelta(days)
     now_ts = str(int(now.timestamp()))
     past_ts = str(int(past.timestamp()))
 
@@ -23,9 +23,12 @@ def get_history(stock):
         volume_series = pd.Series(response["v"], name="volume")
 
         result = pd.concat([time_series, open_series, high_series, low_series, close_series, volume_series], axis=1)
-        result.date = result.date.apply(convert_unix_time)
+
+        if convertTime:
+            result.date = result.date.apply(convert_unix_time)
 
     return result
+    
 def convert_unix_time(date):
     d = datetime.fromtimestamp(date)
     day = str(d.day)
