@@ -1,0 +1,15 @@
+
+{
+  type: 'line',
+  name: 'EMA(9)',
+  data: emaShort,
+  yAxis: 1,
+  color: "#aaa"
+},
+{
+ type: 'flags',
+ name: 'Signals',
+ data: co,
+ yAxis: 0,
+ shape: 'squarepin'
+}
