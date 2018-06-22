@@ -5,16 +5,17 @@ $( document ).ready(function() {
       // create DOM
 
       $("#container").append("<div id='" + response[i].id + "' style='height: 900px; min-width: 310px'>");
-      createOHLC(response[i].id, response[i].name, response[i].ohlc, response[i].close, response[i].ac)
+      t = processSignals(response[i].signal)
+      evaluate(response[i].ohlc, t)
+      createOHLC(response[i].id, response[i].name, response[i].ohlc, response[i].close, response[i].ac, t)
     }
   })
 
 })
 
 
-function createOHLC(id, title, ohlc, close, ac) {
-  var lastDate = ohlc[ohlc.length - 1][0],  // Get year of last data point
-  days = 24 * 36e5;
+function createOHLC(id, title, ohlc, close, ac, ss) {
+
    // create the chart
    var chart = Highcharts.stockChart(id, {
      chart: {
@@ -58,7 +59,7 @@ function createOHLC(id, title, ohlc, close, ac) {
       title: {
         text: 'Accelerator Oscillator'
       },
-      top: '30%%',
+      top: '60%%',
       height: '30%',
       offset: 0,
     }],
@@ -82,8 +83,16 @@ function createOHLC(id, title, ohlc, close, ac) {
         name: 'AC',
         data: ac,
         yAxis: 2,
-        color: "#000088"
+        color: "#bae1ff"
+      },
+      {
+       type: 'flags',
+       name: 'Signals',
+       data: ss,
+       yAxis: 0,
+       shape: 'squarepin'
       }
+
     ],
 
      scrollbar: {
@@ -104,6 +113,28 @@ function createOHLC(id, title, ohlc, close, ac) {
 
    })
  }
+
+function processSignals(data) {
+
+  var signal = []
+  var s;
+  for (var i = 0, len = data.length; i < len; i++) {
+    if(data[i][1] == 1) {
+      s = "Buy"
+    } else if (data[i][1] == -1) {
+      s = "Sell"
+    }
+
+    signal.push({
+      x: data[i][0], // the date
+      title: s,
+      text: s
+    })
+
+  }
+
+  return signal
+}
 
 
  // EMA for closing prices
@@ -172,13 +203,14 @@ function createOHLC(id, title, ohlc, close, ac) {
    var profitFromTrade = 0
    var totalProfitFromTrades = 0
    var numOfTrades = 0
-
+   console.log(t);
    for (var i = 0, len = series.length; i < len; i++) {
        for (var j = 0, lenj = triggers.length; j < lenj; j++) {
          if(series[i][0] == triggers[j].x){
            if(triggers[j].title === "Buy" && !holdingPosition && i < series.length - 1) {
              buyAdjustedPrice = series[i+1][1] + (series[i+1][1] * buyCommission)
              holdingPosition = true
+             // console.log("Date: " + series[i][0]);
              // console.log("Buy: " + buyAdjustedPrice);
            }
            if(triggers[j].title === "Sell" && holdingPosition && i < series.length - 1) {
@@ -188,6 +220,7 @@ function createOHLC(id, title, ohlc, close, ac) {
              currentCash = currentCash + profitFromTrade
              totalProfitFromTrades = totalProfitFromTrades + profitFromTrade
              numOfTrades += 1
+             // console.log("Date: " + new Date(series[i][0]).toString());
              // console.log("Sell: " + sellAdjustedPrice);
              // console.log("Profit: " + profitFromTrade);
            }
