@@ -9,7 +9,7 @@
 {
  type: 'flags',
  name: 'Signals',
- data: co,
+ data: signals,
  yAxis: 0,
  shape: 'squarepin'
 }
