@@ -38,19 +38,8 @@ function createOHLC(id, title, ohlc, close, ac, ss) {
       title: {
         text: 'OHLC'
       },
-      height: '30%',
+      height: '70%',
       lineWidth: 0.2
-    }, {
-      labels: {
-        align: 'right',
-        x: -3
-      },
-      title: {
-        text: 'Close'
-      },
-      top: '30%%',
-      height: '30%',
-      offset: 0,
     }, {
       labels: {
         align: 'right',
@@ -59,7 +48,7 @@ function createOHLC(id, title, ohlc, close, ac, ss) {
       title: {
         text: 'Accelerator Oscillator'
       },
-      top: '60%%',
+      top: '70%',
       height: '30%',
       offset: 0,
     }],
@@ -75,14 +64,13 @@ function createOHLC(id, title, ohlc, close, ac, ss) {
         type: 'line',
         name: 'Close',
         data: close,
-        yAxis: 1,
         color: "#666"
       },
       {
         type: 'column',
         name: 'AC',
         data: ac,
-        yAxis: 2,
+        yAxis: 1,
         color: "#bae1ff"
       },
       {
