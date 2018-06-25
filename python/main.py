@@ -33,6 +33,22 @@ for i, stock in enumerate(stocks):
 final_string = final_string + "]"
 
 print(final_string)
+
+# import client
+# import indicators
+# import matplotlib.pyplot as plt
+#
+# df = client.get_history("SMPH", days=300)
+# df = indicators.previous_close(df)
+#
+# df
+#
+# df['previous_close'].std()
+# df['previous_close'].mean()
+# df['previous_close'].plot.hist(alpha=0.5, bins=50)
+# plt.show()
+
+
 #
 # import pymongo
 # from pymongo import MongoClient

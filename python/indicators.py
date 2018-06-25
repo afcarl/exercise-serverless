@@ -62,3 +62,8 @@ def ac(df):
     ac = pd.Series(ao - sma_ao, name="ac")
     df['ac'] = ac.fillna(0)
     return df
+
+def previous_close(df):
+    p_close = pd.Series(df['close'].rolling(window=2, min_periods=2).apply(lambda x: x[1] - x[0]))
+    df['previous_close'] = p_close
+    return df
