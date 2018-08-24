@@ -18,14 +18,19 @@ def get_signals(df):
     # df = df.fillna(0)
     # return df
 
-    for i in range(1, df.shape[0]):
+    for i in range(30, df.shape[0]):
         # if its green, and opens higher than the previous high, and the body is longer than the top wick
         if df.loc[i,"open"] < df.loc[i,"close"] and \
             df.loc[i-1,"high"] <= df.loc[i,"open"] and \
             df.loc[i,"high"]/df.loc[i,"close"] < df.loc[i,"close"]/df.loc[i,"open"]:
             df.loc[i,"signal"] = 1
+            bars = 1
+            while (df.loc[i-bars,"high"] < df.loc[i,"high"] and bars < 30):
+                bars = bars + 1
+            df.loc[i,"bars"] = bars
         else:
             df.loc[i,"signal"] = 0
+    df.loc[0,"bars"] = 0
     df = df.fillna(0)
     return df
 
@@ -40,10 +45,6 @@ def print_signals():
             print(dd.tail())
             print("\n")
 
-# def pp(x):
-#     print(type(x))
-# type of x is an nd_array
-# dd.rolling(5).apply(pp)
 # rec.insert_many([
 #     {"item": "journal",
 #      "qty": 25,
