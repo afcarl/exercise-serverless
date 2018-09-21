@@ -21,6 +21,11 @@ def ema_volume(df, n=20):
     df = df.join(ema)
     return df
 
+def ema_rsi(df, n=20):
+    ema = pd.Series(df['rsi'].ewm(span=n, min_periods=n).mean(), name='ema_rsi')
+    df = df.join(ema)
+    return df
+
 def ema_close(df, n=9):
     ema = pd.Series(df['close'].ewm(span=n, min_periods=n).mean(), name='ema_close').shift(-1)
     df = df.join(ema)

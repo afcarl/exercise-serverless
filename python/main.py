@@ -40,13 +40,19 @@ import matplotlib.pyplot as plt
 
 # %%
 df = client.get_history("GLO", days=600)
-df = indicators.previous_close(df)
-df.head()
+df = indicators.relative_strength_index(df)
+df = indicators.ema_rsi(df)
 
 # %%
-df['previous_close'].std()
-df['previous_close'].mean()
-df['previous_close'].plot.hist(alpha=0.5, bins=50)
+end=215
+start=end-2
+df_norm = df[['ema_rsi', 'rsi', 'close']]
+df_norm = df_norm[start:end]
+df_norm = (df_norm - df_norm.mean()) / (df_norm.max() - df_norm.min())
+
+df_norm['ema_rsi'].plot()
+# df_norm['close'].plot()
+plt.figure()
 plt.show()
 
 
