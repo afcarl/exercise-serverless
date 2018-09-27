@@ -37,23 +37,43 @@
 import client
 import indicators
 import matplotlib.pyplot as plt
+import pandas as pd
+
 
 # %%
-df = client.get_history("GLO", days=600)
-df = indicators.relative_strength_index(df)
-df = indicators.ema_rsi(df)
+stocks = ["AC","AEV","AGI","ALI","AP","BDO","BPI","DMC","EDC","EMP","FGEN","GLO","GTCAP","ICT","JFC","LTG","MBT","MEG","MER","MPI","PCOR","RLC","SCC","SECB","SM","SMC","SMPH","TEL","URC"]
+for stock in stocks:
+    # print("Checking %s" % stock)
+    df = client.get_history(stock)
+    df = indicators.relative_strength_index(df)
+    df = indicators.ema_rsi(df)
 
-# %%
-end=215
-start=end-2
-df_norm = df[['ema_rsi', 'rsi', 'close']]
-df_norm = df_norm[start:end]
-df_norm = (df_norm - df_norm.mean()) / (df_norm.max() - df_norm.min())
+    df_norm = df[['ema_rsi', 'rsi']]
+    # df_norm = (df_norm - 0.50) * 2 * 100
+    ema_rsi = df_norm['ema_rsi'] # .rolling(window=5, win_type='gaussian', center=True).mean(std=3)
+    ema_rsi = (ema_rsi - 0.5)
+    ema_rsi = ema_rsi * 100
+    ema_rsi = ema_rsi.rolling(window=5, win_type='gaussian', center=True).mean(std=3)
+    ema_rsi = ema_rsi.shift(2)
 
-df_norm['ema_rsi'].plot()
-# df_norm['close'].plot()
-plt.figure()
-plt.show()
+    rsi = df['rsi']
+    rsi = (rsi - 0.5) * 100
+
+    close = df['close']
+    close = (((close - close.min()) / (close.max() - close.min()))) * 100
+    close_smoothed = close.rolling(window=5, win_type='gaussian', center=True).mean(std=3)
+
+    if(ema_rsi.iloc[-1] > 0):
+        plt.figure(figsize=(20,4))
+        rsi.plot(legend=True, title=stock)
+        ema_rsi.plot(legend=True)
+        close_smoothed.plot(legend=True)
+        plt.axhline(y=0, color='black', linestyle='--')
+        plt.show()
+# close.plot()
+# close_smoothed.plot()
+# plt.figure()
+# plt.show()
 
 
 #
