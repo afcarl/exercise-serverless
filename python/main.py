@@ -65,9 +65,9 @@ for stock in stocks:
 
     if(ema_rsi.iloc[-1] > 0):
         plt.figure(figsize=(20,4))
-        rsi.plot(legend=True, title=stock)
-        ema_rsi.plot(legend=True)
-        close_smoothed.plot(legend=True)
+        # rsi.plot(legend=True, title=stock)
+        ema_rsi.tail(20).plot(legend=True)
+        close_smoothed.tail(20).plot(legend=True)
         plt.axhline(y=0, color='black', linestyle='--')
         plt.show()
 # close.plot()
