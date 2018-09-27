@@ -14,7 +14,6 @@ def get_history(stock, convertTime=True, days=100):
     url = "http://api.pse.tools/api/chart/history?symbol={0}&resolution=D&from={1}&to={2}".format(stock, past_ts, now_ts)
     response = requests.get(url).json()
     result = pd.Series()
-    print("Checking %s" % stock)
     if response["s"] == "ok":
         time_series  = pd.Series(response["t"], name="date")
         open_series  = pd.Series(response["o"], name="open")
