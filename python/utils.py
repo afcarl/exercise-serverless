@@ -1,63 +1,15 @@
-import pandas as pd
-from collections import namedtuple
-import indicators
-import client
+import matplotlib.pyplot as plt
 
-# get buy signals
-def get_signals(df):
-    # start at 2 cause we need at least 2 days prior to test
-    # for i in range(2, df.shape[0]):
-    #     ac = df.loc[i-2:i,"ac"].values # ac 2 days ago to now
-    #     if ac[0] < 0 and ac[1] < 0 and ac[0] < ac[1] and ac[1] < ac[2] and ac[2] > 0:
-    #         df.loc[i,"signal"] = 1
-    #     elif ac[0] > 0 and ac[1] > 0 and ac[0] > ac[1] and ac[1] > ac[2] and ac[2] < 0:
-    #         df.loc[i,"signal"] = -1
-    #     else:
-    #         df.loc[i,"signal"] = 0
-    #     i += 1
-    # df = df.fillna(0)
-    # return df
-
-    for i in range(30, df.shape[0]):
-        # if its green, and opens higher than the previous high, and the body is longer than the top wick
-        if df.loc[i,"open"] < df.loc[i,"close"] and \
-            df.loc[i-1,"high"] <= df.loc[i,"open"] and \
-            df.loc[i,"high"]/df.loc[i,"close"] < df.loc[i,"close"]/df.loc[i,"open"]:
-            df.loc[i,"signal"] = 1
-            bars = 1
-            while (df.loc[i-bars,"high"] < df.loc[i,"high"] and bars < 30):
-                bars = bars + 1
-            df.loc[i,"bars"] = bars
-        else:
-            df.loc[i,"signal"] = 0
-    df.loc[0,"bars"] = 0
-    df = df.fillna(0)
-    return df
-
-def print_signals():
-    stocks = ["AC","AEV","AGI","ALI","AP","BDO","BPI","DMC","EDC","EMP","FGEN","GLO","GTCAP","ICT","JFC","LTG","MBT","MEG","MER","MPI","PCOR","RLC","SCC","SECB","SM","SMC","SMPH","TEL","URC"]
-    for stock in stocks:
-        dd = client.get_history(stock)
-        dd = get_signals(dd)
-        print(dd.tail())
-
-# rec.insert_many([
-#     {"item": "journal",
-#      "qty": 25,
-#      "size": {"h": 14, "w": 21, "uom": "cm"},
-#      "status": "A"},
-#     {"item": "notebook",
-#      "qty": 50,
-#      "size": {"h": 8.5, "w": 11, "uom": "in"},
-#      "status": "A"},
-#     {"item": "paper",
-#      "qty": 100,
-#      "size": {"h": 8.5, "w": 11, "uom": "in"},
-#      "status": "D"},
-#     {"item": "planner",
-#      "qty": 75, "size": {"h": 22.85, "w": 30, "uom": "cm"},
-#      "status": "D"},
-#     {"item": "postcard",
-#      "qty": 45,
-#      "size": {"h": 10, "w": 15.25, "uom": "cm"},
-#      "status": "A"}])
+def plot(df):
+    # plot
+    plt.figure(figsize=(5,2))
+    df.norm_ema_rsi.plot(legend=True, title=df.symbol)
+    df.smoothed_close.plot(legend=True)
+    plt.axhline(y=0, color='black', linestyle='--', alpha=0.2)
+    plt.annotate('%0.2f' % df.norm_ema_rsi.tail(1),
+        xy=(1, df.norm_ema_rsi.tail(1)),
+        xytext=(8, 0),
+        xycoords=('axes fraction', 'data'),
+        textcoords='offset points')
+    plt.ylim([-100,100])
+    plt.show()
