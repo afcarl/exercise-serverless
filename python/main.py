@@ -38,13 +38,14 @@ import client
 import indicators
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import numpy as np
 
 # %%
 stocks = ["AC","AEV","AGI","ALI","AP","BDO","BPI","DMC","EDC","EMP","FGEN","GLO","GTCAP","ICT","JFC","LTG","MBT","MEG","MER","MPI","PCOR","RLC","SCC","SECB","SM","SMC","SMPH","TEL","URC"]
+scatter = pd.DataFrame(index=stocks, columns=['strength', 'price'])
+
 for stock in stocks:
-    # print("Checking %s" % stock)
-    df = client.get_history(stock)
+    df = client.get_history(stock, days=365)
     df = indicators.relative_strength_index(df)
     df = indicators.ema_rsi(df)
 
@@ -52,17 +53,36 @@ for stock in stocks:
     # df_norm = (df_norm - 0.50) * 2 * 100
     ema_rsi = df_norm['ema_rsi'] # .rolling(window=5, win_type='gaussian', center=True).mean(std=3)
     ema_rsi = (ema_rsi - 0.5)
-    ema_rsi = ema_rsi * 100
-    ema_rsi = ema_rsi.rolling(window=5, win_type='gaussian', center=True).mean(std=3)
-    ema_rsi = ema_rsi.shift(2)
+    ema_rsi = ema_rsi * 200
+    # ema_rsi = ema_rsi.rolling(window=5, win_type='gaussian', center=True).mean(std=3)
+    # ema_rsi = ema_rsi.shift(2)
 
     rsi = df['rsi']
-    rsi = (rsi - 0.5) * 100
+    rsi = (rsi - 0.5) * 200
 
     close = df['close']
+
+    scatter.loc[stock].strength = ema_rsi.iloc[-1]
+    scatter.loc[stock].price = close.iloc[-1]
     close = (((close - close.min()) / (close.max() - close.min()))) * 100
     close_smoothed = close.rolling(window=5, win_type='gaussian', center=True).mean(std=3)
+    close_smoothed = close_smoothed.shift(2)
+    plt.figure(figsize=(15,2))
+    ema_rsi.plot(legend=True, title=stock)
+    close_smoothed.plot(legend=True, title=stock)
+    plt.axhline(y=10, color='black', linestyle='--', alpha=0.2)
+    plt.axhline(y=-10, color='black', linestyle='--', alpha=0.2)
+    plt.annotate('%0.2f' % ema_rsi.tail(1), xy=(1, ema_rsi.tail(1)), xytext=(8, 0),
+             xycoords=('axes fraction', 'data'), textcoords='offset points')
+    plt.show()
 
+# %%
+scatter = scatter.astype(np.float)
+plt.figure(figsize=(8,8))
+plt.scatter(scatter.price,scatter.strength, alpha=0.5)
+plt.xscale("log")
+
+<<<<<<< HEAD
     if(ema_rsi.iloc[-1] > 0):
         plt.figure(figsize=(20,4))
         # rsi.plot(legend=True, title=stock)
@@ -74,8 +94,26 @@ for stock in stocks:
 # close_smoothed.plot()
 # plt.figure()
 # plt.show()
+=======
+for index, row in scatter.iterrows():
+   plt.annotate(row.name, (row.price, row.strength))
+>>>>>>> d78c32a8fa44e8fbe63c0be162bdd61a0219dfc2
 
 
+# plt.axvline(x=10, color='black', linestyle='--', alpha=0.1)
+# plt.axvline(x=-10, color='black', linestyle='--', alpha=0.1)
+# plt.axvline(x=20, color='black', linestyle='--', alpha=0.2)
+# plt.axvline(x=-20, color='black', linestyle='--', alpha=0.2)
+# plt.axvline(x=40, color='black', linestyle='--', alpha=0.2)
+# plt.axvline(x=-40, color='black', linestyle='--', alpha=0.2)
+# plt.axvline(x=60, color='black', linestyle='--', alpha=0.2)
+# plt.axvline(x=-60, color='black', linestyle='--', alpha=0.2)
+# plt.axvline(x=80, color='black', linestyle='--', alpha=0.2)
+# plt.axvline(x=-80, color='black', linestyle='--', alpha=0.2)
+plt.axhline(y=10, color='black', linestyle='--', alpha=0.2)
+plt.axhline(y=-10, color='black', linestyle='--', alpha=0.2)
+plt.ylim([-100,100])
+plt.show()
 #
 # import pymongo
 # from pymongo import MongoClient
@@ -92,4 +130,4 @@ for stock in stocks:
 # db = client.quantmonkey
 # rec = db.recommendations
 #
-# rec.insert_one({'a':1})
+# rec.insert_one({'a':1
