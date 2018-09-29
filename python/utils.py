@@ -1,5 +1,10 @@
 import matplotlib.pyplot as plt
 
+def create_json(df):
+    json = [dict([(colname, row[i]) for i, colname in enumerate(df.columns)])
+        for row in df.values ]
+    return json
+
 def plot(df):
     # plot
     plt.figure(figsize=(5,2))

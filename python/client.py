@@ -33,10 +33,9 @@ def convert_unix_time(date):
     year = str(d.year)
     return "{0}-{1}-{2}".format(year, month.zfill(2), day.zfill(2))
 
-def post_json():
+def put_json(json):
     url = 'https://api.jsonbin.io/b/5badfc4d8713b17b52b0b603'
     key = os.environ['JSONBIN_KEY']
     headers = {'secret-key': key}
-
-    req = requests.put(url, json=nil, headers=headers)
-    print(req.text)
+    response = requests.put(url, json=json, headers=headers).json()
+    return response
