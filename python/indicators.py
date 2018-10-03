@@ -1,4 +1,5 @@
 import pandas as pd
+from collections import namedtuple
 
 def ema_rsi(df, n=20):
     ema = pd.Series(df['rsi'].ewm(span=n, min_periods=n).mean(), name='ema_rsi')
@@ -29,4 +30,19 @@ def relative_strength_index(df, n=14):
     negative_di = pd.Series(down_index.ewm(span=n, min_periods=n).mean())
     rsi = pd.Series(positive_di / (positive_di + negative_di), name='rsi')
     df = df.join(rsi)
+    return df
+
+def heiken_ashi(df):
+    df['ha_close'] = (df['open'] + df['high'] + df['low'] + df['close']) / 4
+    nt = namedtuple('nt', ['open','close'])
+    previous_row = nt(df.loc[0,'open'],df.loc[0,'close'])
+    i = 0
+    for row in df.itertuples():
+        ha_open = (previous_row.open + previous_row.close) / 2
+        df.loc[i,'ha_open'] = ha_open
+        previous_row = nt(ha_open, row.close)
+        i += 1
+
+    df['ha_high'] = df[['ha_open','ha_close','high']].max(axis=1)
+    df['ha_low'] = df[['ha_open','ha_close','low']].min(axis=1)
     return df
