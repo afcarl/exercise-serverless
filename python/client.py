@@ -5,7 +5,7 @@ import os
 
 def get_history(symbol, convertTime=True, days=100):
     now = datetime.today()
-    past = now - timedelta(days)
+    past = now - timedelta(days + 1)
     now_ts = str(int(now.timestamp()))
     past_ts = str(int(past.timestamp()))
 
@@ -25,6 +25,9 @@ def get_history(symbol, convertTime=True, days=100):
         if convertTime:
             result.date = result.date.apply(convert_unix_time)
     return result
+
+def get_last(symbol, bars=10):
+    return get_history(symbol, 100)[:bars]
 
 def convert_unix_time(date):
     d = datetime.fromtimestamp(date)
