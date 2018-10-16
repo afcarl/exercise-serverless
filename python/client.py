@@ -27,7 +27,9 @@ def get_history(symbol, convertTime=True, days=100):
     return result
 
 def get_last(symbol, bars=10):
-    return get_history(symbol, 100)[:bars]
+    df = get_history(symbol, 100).tail(bars)
+    df.reset_index(inplace=True, drop=True)
+    return df
 
 def convert_unix_time(date):
     d = datetime.fromtimestamp(date)

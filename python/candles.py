@@ -2,20 +2,38 @@ import client
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-ali = client.get_last("JGS", bars=3)
+from sklearn import preprocessing
 
+def initialize(path):
+    df = pd.read_csv(path, index_col='symbol')
+    return df
 
-# drop the date
-# ali = ali.drop("date", axis=1)
+def display(df):
+    for index, item in df.iterrows():
+        # only do the PSEi for now_ts
+        if(not item.psei):
+            continue
+        # retrieve history
+        symbol = item.name
+        equity = client.get_last(symbol, bars=3)
+        print(symbol)
+        # setup information
+        equity['do'] = equity['open']
+        equity['dh'] =  pd.Series(np.array([equity['high'].tail(3).max(), equity['high'].tail(2).max(), equity['high'].tail(1).max()]))
+        equity['dl'] =  pd.Series(np.array([equity['low'].tail(3).min(), equity['low'].tail(2).min(), equity['low'].tail(1).min()]))
+        equity['dc'] = pd.Series(np.repeat(equity.tail(1)['close'].values[0], 3))
 
-# open dont change, close is close of the last, high and low are max
-ali['dopen'] = ali['open']
+        #normalize
+        norm_equity = equity.drop(['date','volume','open','high','low','close'], axis=1)
+        # stripped_equity = equity.drop(['date','volume','do','dh','dl','dc'], axis=1)
+        min = norm_equity['dl'].min()
+        max = norm_equity['dh'].max()
+        norm_equity = (norm_equity - min) / (max - min)
 
-ali['dhigh'] =  pd.Series(np.array([ali['high'].tail(3).max(), ali['high'].tail(2).max(), ali['high'].tail(1).max()]))
+        # plot
+        norm_equity.plot(marker='*',linestyle='--')
+        # stripped_equity.plot(marker='*',linestyle='--')
+        plt.show()
 
-ali['dlow'] =  pd.Series(np.array([ali['low'].tail(3).min(), ali['low'].tail(2).min(), ali['low'].tail(1).min()]))
-
-ali['dclose'] = pd.Series(np.repeat(ali.loc[2]['close'], 3))
-ali = ali.drop("date", axis=1)
-ali = ali.drop("volume", axis=1)
-plt.show()
+equities = initialize(path='equities.csv')
+display(equities)
