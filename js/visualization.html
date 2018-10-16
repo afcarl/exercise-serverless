@@ -1,10 +1,37 @@
+<!--
+TODO:
+ * Make it dynamic
+ * Read from JSON
+-->
 <html>
 <head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+    }
+    .equity {
+      border: 1px solid #444;
+      margin: 3px;
+      display: inline-block;
+    }
+    .content {
+      padding: 8px;
+      display: inline-block;
+    }
+    .title {
+      text-align: center;
+      padding: 4px 2px;
+      font-size:12px;
+      color: white;
+      background-color: #444;
+    }
     .candle {
       height: 40px;
       display: inline-block;
       padding: 0;
+      margin: 0 3px;
     }
     .upperShadow {
       margin-left: 5px;
@@ -27,20 +54,45 @@
   </style>
 </head>
 <body>
-  <div class="candle">
-    <div class="upperShadow"></div>
-    <div class="body"></div>
-    <div class="lowerShadow"></div>
+  <div class="equity">
+    <div class="title">ALI</div>
+    <div class="content">
+      <div class="candle">
+        <div class="upperShadow"></div>
+        <div class="body"></div>
+        <div class="lowerShadow"></div>
+      </div>
+      <div class="candle">
+        <div class="upperShadow"></div>
+        <div class="body"></div>
+        <div class="lowerShadow"></div>
+      </div>
+      <div class="candle">
+        <div class="upperShadow"></div>
+        <div class="body"></div>
+        <div class="lowerShadow"></div>
+      </div>
+    </div>
   </div>
-  <div class="candle">
-    <div class="upperShadow"></div>
-    <div class="body"></div>
-    <div class="lowerShadow"></div>
-  </div>
-  <div class="candle">
-    <div class="upperShadow"></div>
-    <div class="body"></div>
-    <div class="lowerShadow"></div>
+  <div class="equity">
+    <div class="title">ALI</div>
+    <div class="content">
+      <div class="candle">
+        <div class="upperShadow"></div>
+        <div class="body"></div>
+        <div class="lowerShadow"></div>
+      </div>
+      <div class="candle">
+        <div class="upperShadow"></div>
+        <div class="body"></div>
+        <div class="lowerShadow"></div>
+      </div>
+      <div class="candle">
+        <div class="upperShadow"></div>
+        <div class="body"></div>
+        <div class="lowerShadow"></div>
+      </div>
+    </div>
   </div>
 </body>
 </html>
