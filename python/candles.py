@@ -2,7 +2,7 @@ import client
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-from sklearn import preprocessing
+import display as d
 
 def initialize(path):
     df = pd.read_csv(path, index_col='symbol')
@@ -15,6 +15,7 @@ def display(df):
             continue
         # retrieve history
         symbol = item.name
+
         equity = client.get_last(symbol, bars=3)
         print(symbol)
         # setup information
@@ -25,15 +26,15 @@ def display(df):
 
         #normalize
         norm_equity = equity.drop(['date','volume','open','high','low','close'], axis=1)
-        # stripped_equity = equity.drop(['date','volume','do','dh','dl','dc'], axis=1)
+        stripped_equity = equity.drop(['date','volume','do','dh','dl','dc'], axis=1)
         min = norm_equity['dl'].min()
         max = norm_equity['dh'].max()
         norm_equity = (norm_equity - min) / (max - min)
-
-        # plot
-        norm_equity.plot(marker='*',linestyle='--')
-        # stripped_equity.plot(marker='*',linestyle='--')
-        plt.show()
+        d.plot(norm_equity)
+# plot
+# norm_equity.plot(marker='*',linestyle='--')
+# stripped_equity.plot(marker='*',linestyle='--')
+# plt.show()
 
 equities = initialize(path='equities.csv')
 display(equities)
