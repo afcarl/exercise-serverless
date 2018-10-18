@@ -30,7 +30,7 @@ def plot(bars):
             patches.Rectangle(
                 (offset + 0.5, low),
                 0.01, shadow_tail,
-                color="black",
+                color=color,
                 alpha=0.4,
                 fill=True
             )
@@ -41,7 +41,8 @@ def plot(bars):
              patches.Rectangle(
                 (offset + 0, shadow_tail + low),
                 1, body,
-                color=color,
+                facecolor=color,
+                edgecolor='black',
                 alpha=0.8,
                 fill=True
             )
@@ -52,7 +53,7 @@ def plot(bars):
             patches.Rectangle(
                 (offset + 0.5, body + shadow_tail + low),
                 0.01, shadow_head,
-                color="black",
+                color=color,
                 alpha=0.4,
                 fill=True
             )
