@@ -10,7 +10,9 @@ def get_history(symbol, convertTime=True, days=100):
     past_ts = str(int(past.timestamp()))
 
     url = "http://api.pse.tools/api/chart/history?symbol={0}&resolution=D&from={1}&to={2}".format(symbol, past_ts, now_ts)
+
     response = requests.get(url).json()
+
     result = pd.Series()
     if response["s"] == "ok":
         time_series  = pd.Series(response["t"], name="date")
@@ -24,6 +26,8 @@ def get_history(symbol, convertTime=True, days=100):
 
         if convertTime:
             result.date = result.date.apply(convert_unix_time)
+    else:
+        result = pd.DataFrame(columns=["date","open","high","low","close","volume"])
     return result
 
 def get_last(symbol, bars=10):

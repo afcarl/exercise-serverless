@@ -11,8 +11,8 @@ def initialize(path):
 def display(df):
     for index, item in df.iterrows():
         # only do the PSEi for now_ts
-        if(not item.psei):
-            continue
+        # if(item.psei):
+        #     continue
         # retrieve history
         symbol = item.name
 
@@ -34,7 +34,7 @@ def display(df):
 # plot
 # norm_equity.plot(marker='*',linestyle='--')
 # stripped_equity.plot(marker='*',linestyle='--')
-# plt.show()
+        plt.show()
 
 equities = initialize(path='equities.csv')
 display(equities)
