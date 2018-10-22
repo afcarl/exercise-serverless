@@ -1,9 +1,24 @@
 import pandas as pd
 from collections import namedtuple
 
+def ema(df, column_in, column_out, n=20):
+    ema = pd.Series(df[column_in].ewm(span=n, min_periods=n).mean(), name=column_out)
+    df = df.join(ema)
+    return df
+
 def ema_rsi(df, n=20):
     ema = pd.Series(df['rsi'].ewm(span=n, min_periods=n).mean(), name='ema_rsi')
     df = df.join(ema)
+    return df
+
+def day_range_pct(df):
+    drp = pd.Series(((df['high'] - df['low']) / df['close']) * 100, name='day_range_pct')
+    df = df.join(drp)
+    return df
+
+def day_range_pct(df):
+    drp = pd.Series(((df['high'] - df['low']) / df['close']) * 100, name='day_range_pct')
+    df = df.join(drp)
     return df
 
 def relative_strength_index(df, n=14):
