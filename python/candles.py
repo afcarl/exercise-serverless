@@ -1,14 +1,12 @@
 import client
 import pandas as pd
 import numpy as np
-from matplotlib import pyplot as plt
 import display as d
 
 df = pd.read_csv('./equities.csv', index_col='symbol')
 for index, item in df.iterrows():
     symbol = item.name
     equity = client.get_last(symbol)
-    print(symbol)
     #normalize
     norm_equity = equity.drop(['date','volume'], axis=1)
     min_equity = norm_equity['low'].min()
@@ -20,4 +18,6 @@ for index, item in df.iterrows():
     max_volume = norm_volume['volume'].max()
     norm_volume = (norm_volume - min_volume) / (max_volume - min_volume)
 
-    d.plot(norm_equity, norm_volume)
+    d.plot(symbol, norm_equity, norm_volume)
+    
+print("Done.")

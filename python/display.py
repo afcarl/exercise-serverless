@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import math
 
-def plot(bars, volume):
+def plot(symbol, bars, volume):
     figure = plt.figure()
     candle_plot = figure.add_subplot(111, aspect='equal')
 
@@ -10,7 +10,6 @@ def plot(bars, volume):
     total = bars.shape[0]
     factor = 5
     volsize = (factor/2) + 0.2
-
     while count < total:
         open  = bars.loc[count, 'open'] * factor
         high  = bars.loc[count, 'high'] * factor
@@ -77,4 +76,5 @@ def plot(bars, volume):
     plt.axis('equal')
     plt.axis('off')
     plt.tight_layout()
-    plt.show()
+    plt.savefig("./candles/{}".format(symbol))
+    plt.close()
